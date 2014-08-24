@@ -21,19 +21,8 @@ int bmp_close(bmp_file *bmp) {
 	return 0;
 }
 
-int string_to_int(unsigned char *string) {
-    int  i, n;
-
-    n = 0;
-
-    for(i = 0; string[i] != '\0'; i++)
-        n = (n*10)+(string[i]-'0');
-
-    return n;
-}
-
 int bmp_read_header(bmp_file *bmp) {
-	int size;
+	int temp;
 
 	/* Bitmap file header contains 14 bytes */
 	readin_buffer(bmp->file, bmp->buffer, 14);
@@ -52,18 +41,60 @@ int bmp_read_header(bmp_file *bmp) {
 	bmp->offset = (bmp->buffer[13] << 24) + (bmp->buffer[12] << 16) + (bmp->buffer[11] << 8) + bmp->buffer[10];
 
 	/* DIB header contains OFFSET-14 bytes */
-	size = bmp->offset-14;
-	readin_buffer(bmp->file, bmp->buffer, size);
+	temp = bmp->offset-14;
+	readin_buffer(bmp->file, bmp->buffer, temp);
 
 	/* First 4 bytes: DIB header size */
 	bmp->size_DIB = (bmp->buffer[3] << 24) + (bmp->buffer[2] << 16) + (bmp->buffer[1] << 8) + bmp->buffer[0];
-	if(bmp->size_DIB != size) {
-		printf("ERROR: Mismatch DIB header for file %s\n", bmp->path);
+	if(bmp->size_DIB != temp) {
+		printf("ERROR: Mismatch DIB header size\n");
 		return 1;
 	}
 
-	printf("size:%d\n", bmp->size_file);
-	printf("offset:%d\n", bmp->size_DIB);
+	/* Next 4 bytes: Width */
+	bmp->width = (bmp->buffer[7] << 24) + (bmp->buffer[6] << 16) + (bmp->buffer[5] << 8) + bmp->buffer[4];
+
+	/* Next 4 bytes: Height */
+	bmp->height = (bmp->buffer[11] << 24) + (bmp->buffer[10] << 16) + (bmp->buffer[9] << 8) + bmp->buffer[8];
+
+	/* Next 2 bytes: Plane (Useless) */
+	/* Next 2 bytes: Bits per pixel */
+	bmp->bPP = (bmp->buffer[15] << 8) + bmp->buffer[14];
+	bmp->BPP = bmp->bPP/8;
+
+	/* Next 4 bytes: Compression */
+	temp = (bmp->buffer[19] << 24) + (bmp->buffer[18] << 16) + (bmp->buffer[17] << 8) + bmp->buffer[16];
+	if(temp != 0) {
+		printf("ERROR: Only uncompressed bitmap are supported\n");
+		return 1;
+	}
+
+	/* Next 4 bytes: Image size */
+	temp = bmp->BPP*(bmp->width*bmp->height);
+	bmp->size_image = (bmp->buffer[23] << 24) + (bmp->buffer[22] << 16) + (bmp->buffer[21] << 8) + bmp->buffer[20];
+	if(bmp->size_image != temp) {
+		printf("ERROR: Mismatch image size\n");
+		return 1;
+	}
+
+#if DEBUG
+	printf(" File size: %d\n", bmp->size_file);
+	printf("    Offset: %d\n", bmp->offset);
+	printf("  DIB size: %d\n", bmp->size_DIB);
+	printf("     Width: %d\n", bmp->width);
+	printf("    Height: %d\n", bmp->height);
+	printf("       bPP: %d\n", bmp->bPP);
+	printf("       BPP: %d\n", bmp->BPP);
+	printf("Image size: %d\n", bmp->size_image);
+#endif
+
+	return 0;
+}
+
+int bmp_read_image(bmp_file *bmp) {
+	bmp->image = malloc(bmp->size_image * sizeof(char));
+
+	readin_buffer(bmp->file, bmp->image, bmp->size_image);
 
 	return 0;
 }

@@ -16,6 +16,8 @@ int main() {
 		return 1;
 	}
 
+	bmp_read_image(&image);
+
 	bmp_close(&image);
 
 	return 0;

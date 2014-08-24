@@ -5,7 +5,7 @@ int readin_buffer(FILE *file, unsigned char *buffer, int size) {
 
 	for(i=0; i<size; i++) {
 		buffer[i] = fgetc(file);
-/*		printf("%c\n", buffer[i]); */
+		printf("%x\n", buffer[i]); 
 	}
 
     return 0;
