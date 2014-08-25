@@ -26,9 +26,18 @@ int main(int argc, char *argv[]) {
 	if(bmp_read_header(&image) == 1) {
 		bmp_close(&image);
 		return 1;
+	}	
+	
+	if(image.width%2 != 0 && image.height%2 != 0) {
+		printf("ERROR: The input file must have an even resolution\n");
+		bmp_close(&image);
+		return 1;
+	} else if(bmp_check_size(&image) != 0) {
+		bmp_close(&image);
+		return 1;
 	}
 
-	buffer = malloc(image.size_file*sizeof(char));
+	buffer = malloc(image.size_image*sizeof(char));
 	bmp_dump_header(&image, buffer);
 
 	bmp_read_image(&image);
@@ -40,7 +49,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	
 	bmp_write_image(&image_new, buffer, image.offset);
-	bmp_write_image(&image_new, algo.data, (image.size_file-image.offset));
+	bmp_write_image(&image_new, algo.data, image.size_image);
 
 	bmp_close(&image_new);
 

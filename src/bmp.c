@@ -72,10 +72,6 @@ int bmp_read_header(bmp_file *bmp) {
 	/* Next 4 bytes: Image size */
 	temp = bmp->BPP*(bmp->width*bmp->height);
 	bmp->size_image = (bmp->buffer[23] << 24) + (bmp->buffer[22] << 16) + (bmp->buffer[21] << 8) + bmp->buffer[20];
-	if(bmp->size_image != temp) {
-		printf("ERROR: Mismatch image size\n");
-		return 1;
-	}
 
 #if DEBUG
 	printf("\n");
@@ -110,6 +106,19 @@ int bmp_dump_header(bmp_file *bmp, unsigned char *buffer) {
 
 int bmp_write_image(bmp_file *bmp, unsigned char *buffer, int size) {
 	writeout_buffer(bmp->file, buffer, size);
+
+	return 0;
+}
+
+int bmp_check_size(bmp_file *bmp) {
+	int size;
+	
+	size = bmp->width*bmp->height;
+	if(bmp->size_image != size) {
+		printf("ERROR: Mismatch image size\n");
+		printf("       %d != %d\n", bmp->size_image, size);
+		return 1;
+	}
 
 	return 0;
 }

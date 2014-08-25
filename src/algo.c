@@ -4,6 +4,7 @@ int apply_algo(algorithm *algo) {
 	unsigned char *pixel;
 	char direction[2];
 	int iteration[3];
+	int offset[2];
 	int i;
 	int x[3];
 	int y[3];
@@ -14,8 +15,9 @@ int apply_algo(algorithm *algo) {
 	pixel = malloc(algo->byte_format*sizeof(char));
 
 	iteration[0] = algo->bmp->width;
-	iteration[1] = iteration[0]*iteration[0];
-	iteration[2] = iteration[0]/2;
+	iteration[1] = algo->bmp->width*algo->bmp->height;
+	offset[0] = algo->bmp->width/2;
+	offset[1] = algo->bmp->height/2;
 
 	x[0]=0;
 	x[1]=0;
@@ -34,17 +36,17 @@ int apply_algo(algorithm *algo) {
 			x[2] = x[1];
 		} else {
 			direction[0] = 0;
-			x[2] = x[1]+iteration[2];
+			x[2] = x[1]+offset[0];
 			x[1] = x[1]+1;
 		}
 
 		if(direction[1] == 0) {
 			y[2] = y[1];
 		} else {
-			y[2] = y[1]+iteration[2];
+			y[2] = y[1]+offset[1];
 		}
 
-		if(x[1] == iteration[2]) {
+		if(x[1] == offset[0]) {
 			x[1] = 0;
 			if(direction[1] == 0)
 				direction[1] = 1;
@@ -56,15 +58,26 @@ int apply_algo(algorithm *algo) {
 
 		write_pixel(algo, x[2], y[2], pixel);
 
+		printf("%d: %d %d - %d %d\n", i, x[0], y[0], x[2], y[2]);
+
 		x[0] = x[0]+1;
 		if(x[0] == iteration[0]) {
 			x[0] = 0;
 			y[0] = y[0]+1;
 		}	
 	}
+	
+	printf("%d\n", iteration[1]);
+	
 	free(pixel);
 	return 0;
 }
+
+int apply_algo2(algorithm *algo) {
+
+	return 0;
+}
+
 
 int read_pixel(algorithm *algo, int x, int y, unsigned char *pixel) {
 	int p;

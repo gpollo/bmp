@@ -9,6 +9,7 @@ typedef struct algorithm {
 } algorithm;
 
 int apply_algo(algorithm *algo);
+int apply_algo2(algorithm *algo);
 int read_pixel(algorithm *algo, int x, int y, unsigned char *pixel);
 int write_pixel(algorithm *algo, int x, int y, unsigned char *pixel);
 int algo_free(algorithm *algo);

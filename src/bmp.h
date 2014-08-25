@@ -30,6 +30,7 @@ int bmp_read_header(bmp_file *bmp);
 int bmp_read_image(bmp_file *bmp);
 int bmp_dump_header(bmp_file *bmp, unsigned char *buffer);
 int bmp_write_image(bmp_file *bmp, unsigned char *buffer, int size);
+int bmp_check_size(bmp_file *bmp);
 int bmp_free(bmp_file *bmp);
 
 #endif
