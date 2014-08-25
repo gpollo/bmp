@@ -1,0 +1,11 @@
+#!/bin/bash 
+
+A=0
+B=1
+PREFIX=complex
+while [  $A -lt 40 ]; do
+	bin/bmp img/$PREFIX$A.bmp img/$PREFIX$B.bmp
+	echo $A $B
+	let A=A+1
+	let B=B+1 
+done

@@ -4,11 +4,11 @@
 #define BMP_SIG_B0 66
 #define BMP_SIG_B1 77
 
-int bmp_open(bmp_file *bmp) {
-	bmp->file = fopen(bmp->path, "r");
+int bmp_open(bmp_file *bmp, char *perm) {
+	bmp->file = fopen(bmp->path, perm);
 	
 	if(bmp->file == NULL) {
-		printf("ERROR: Could not open file %s\n", bmp->path);
+		printf("ERROR: Could not open file '%s'\n", bmp->path);
 		return 1;
 	}
 
@@ -29,7 +29,7 @@ int bmp_read_header(bmp_file *bmp) {
 
 	/* First 2 bytes: Signature */
 	if(bmp->buffer[0] != BMP_SIG_B0 || bmp->buffer[1] != BMP_SIG_B1) {
-		printf("ERROR: File %s is not a valid BMP file\n", bmp->path);
+		printf("ERROR: File '%s' is not a valid BMP file\n", bmp->path);
 		return 1;
 	}
 
@@ -78,6 +78,7 @@ int bmp_read_header(bmp_file *bmp) {
 	}
 
 #if DEBUG
+	printf("\n");
 	printf(" File size: %d\n", bmp->size_file);
 	printf("    Offset: %d\n", bmp->offset);
 	printf("  DIB size: %d\n", bmp->size_DIB);
@@ -86,15 +87,35 @@ int bmp_read_header(bmp_file *bmp) {
 	printf("       bPP: %d\n", bmp->bPP);
 	printf("       BPP: %d\n", bmp->BPP);
 	printf("Image size: %d\n", bmp->size_image);
+	printf("\n");
 #endif
 
 	return 0;
 }
 
 int bmp_read_image(bmp_file *bmp) {
-	bmp->image = malloc(bmp->size_image * sizeof(char));
+	bmp->data = malloc(bmp->size_image*sizeof(char));
 
-	readin_buffer(bmp->file, bmp->image, bmp->size_image);
+	readin_buffer(bmp->file, bmp->data, bmp->size_image);
+
+	return 0;
+}
+
+int bmp_dump_header(bmp_file *bmp, unsigned char *buffer) {
+	rewind(bmp->file);
+	readin_buffer(bmp->file, buffer, bmp->offset);
+
+	return 0;
+}
+
+int bmp_write_image(bmp_file *bmp, unsigned char *buffer, int size) {
+	writeout_buffer(bmp->file, buffer, size);
+
+	return 0;
+}
+
+int bmp_free(bmp_file *bmp) {
+	free(bmp->data);
 
 	return 0;
 }

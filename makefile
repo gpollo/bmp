@@ -6,12 +6,15 @@ SRCDIR=src
 
 all: $(EXEC)
 
-$(EXEC): mkdir io.o bmp.o main.o
-	gcc -o bin/$(EXEC) $(SRCDIR)/bmp.o $(SRCDIR)/io.o $(SRCDIR)/main.o $(LDFLAGS)
+$(EXEC): mkdir algo.o io.o bmp.o main.o
+	gcc -o bin/$(EXEC) $(SRCDIR)/algo.o $(SRCDIR)/io.o $(SRCDIR)/bmp.o $(SRCDIR)/main.o $(LDFLAGS)
 	rm -rf $(SRCDIR)/*.o
 
 main.o: $(SRCDIR)/main.c
 	gcc -o $(SRCDIR)/main.o -c $(SRCDIR)/main.c $(CFLAGS)
+
+algo.o: $(SRCDIR)/algo.c
+	gcc -o $(SRCDIR)/algo.o -c $(SRCDIR)/algo.c $(CFLAGS)
 
 io.o: $(SRCDIR)/io.c
 	gcc -o $(SRCDIR)/io.o -c $(SRCDIR)/io.c $(CFLAGS)
