@@ -18,7 +18,7 @@ Uninstallation
 Usage
 -----
 
-This program takes 2 arguments. The input file and the output file. The files must be in BMP format. Do not expect all BMP files to works. I did not implement full BMP standard.
+This program takes 2 arguments. The input file and the output file. The files must be in BMP format. Do not expect all BMP files to works. I did not implement full BMP specifications.
 
 	$ bmp img/circle0.bmp img/circle1.bmp
   
@@ -33,3 +33,14 @@ You might want to edit the script to fit your needs.
 	<img src="/img/example.png" alt="example.png">
 </p>
 
+Note
+----
+
+- Your input image must have an aspect ratio of 1:1
+- Your input image must have an even number of pixel width/height
+- Your output image will be overwritten
+
+Todo
+----
+- Add support for other aspect ratio
+- Add support for more than 2x2 block
