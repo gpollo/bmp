@@ -44,3 +44,7 @@ Todo
 ----
 - Add support for other aspect ratio
 - Add support for more than 2x2 block
+
+<p align="center">
+	<img src="/img/desktop.png" alt="desktop.png">
+</p>
