@@ -36,13 +36,12 @@ You might want to edit the script to fit your needs.
 Note
 ----
 
-- Your input image must have an aspect ratio of 1:1
-- Your input image must have an even number of pixel width/height
-- Your output image will be overwritten
+- ~~Your input image must have an aspect ratio of 1:1~~
+- ~~Your input image must have an even number of pixel width/height~~
 
 Todo
 ----
-- Add support for other aspect ratio
+- ~~Add support for other aspect ratio~~
 - Add support for more than 2x2 block
 
 <p align="center">
