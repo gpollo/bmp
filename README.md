@@ -28,4 +28,8 @@ An interesting effect happens when you recursively apply the algorithm to the ou
   
 You might want to edit the script to fit your needs.
 
-<img align="center" src="/img/example.png" alt="example.png">
+
+<p align="center">
+	<img src="/img/example.png" alt="example.png">
+</p>
+
